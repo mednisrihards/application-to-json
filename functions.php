@@ -1,6 +1,5 @@
 <?php 
 
-
 //--------------------------------VECUMA APRĒĶINĀŠANA----------------------------------------
 
 function ageCheck($birthDate){
@@ -9,8 +8,6 @@ function ageCheck($birthDate){
     $age = $diff->format('%Y');      //Saglabā personas vecumu mainīgajā
     return $age;                     // Atgriež personas vecumu
 }
-
-
 
 //--------------------------------ATTĒLA PIEVIENOŠANA----------------------------------------
 
@@ -22,25 +19,28 @@ function addImage($image){
     $imageExtension = strtolower(end($imageExtension));   //saglabā tikai paplašinājumu
     $allowedExtensions = array('jpg', 'jpeg', 'png');             //Pieļaujamo paplašinājumu masīvs
     
-    
 //---------Pārbaude "Vai direktorija eksistē". Ja nē, tad izveido direktoriju.
-$dir = "./IMAGES";
-if(!is_dir($dir)){
-    mkdir($dir, 0777, true);
-}
-    
-        if(in_array($imageExtension, $allowedExtensions)){                  //Pārbauda vai faila paplašīnājums ir atļauts
-            global $newImageName;
-            $newImageName = uniqid('', true) . '.' . $imageExtension;       //Ģenerē jaunu faila nosaukumu
-            $imageDestination = 'images/' . $newImageName;                  //Faila glabāšanas vieta
-            move_uploaded_file($imageTemp, $imageDestination)               //Augšupielādē failu serverī
-            or exit("Attēla augšupielāde neveiksmīga");                     //Pārstāj izpildīt kodu, ja attēla ielāde bijusi neveiksmīga
-        }
-        else{
-            exit("Attēla augšupielāde neveiksmīga");                        //Pārstāj izpildīt kodu, ja faila paplašinājums nav atļauts
-        }
-}
+    $dir = "./IMAGES";
+    if(!is_dir($dir)){
+        mkdir($dir, 0777, true);
+        chown($dir, "www-data");
+    }
+        
+    if(in_array($imageExtension, $allowedExtensions)){                  //Pārbauda vai faila paplašīnājums ir atļauts
+        // if(false){
+        global $newImageName;
+        $newImageName = uniqid('', true) . '.' . $imageExtension;       //Ģenerē jaunu faila nosaukumu
+        $imageDestination = 'IMAGES/' . $newImageName;                  //Faila glabāšanas vieta
+        move_uploaded_file($imageTemp, $imageDestination)               //Augšupielādē failu serverī
+        or exit("Attēla augšupielāde neveiksmīga" . $imageTemp);                     //Pārstāj izpildīt kodu, ja attēla ielāde bijusi neveiksmīga
+    }
+    else{
+        // $temp = sys_get_temp_dir();
+        // exit($temp);
+        exit("Attēla augšupielāde neveiksmīga");                        //Pārstāj izpildīt kodu, ja faila paplašinājums nav atļauts
+    }
 
+}
 
 //--------------------------------PIETEIKUMA PIEVIENOŠANA------------------------------------
 
@@ -48,12 +48,11 @@ function addRecord($person){
     global $newImageName;        //Ģenerētais, jaunais faila nosaukums
         $person->imageRef = "$newImageName";        
         
-
-    
 //---------Pārbaude "Vai direktorija eksistē". Ja nē, tad izveido direktoriju.
 $dir = "./JSON";
 if(!is_dir($dir)){
     mkdir($dir, 0777, true);
+    chown($dir, "www-data");
 }
     
 //--------Pārbauda vai fails eksistē, ja neeksistē, tad izveido failu
@@ -107,16 +106,16 @@ function getRecords() {
     for ($i=0; $i < count($json_arr); $i++) { 
         echo '<tr>';
             echo '<td>';
-                print_r($json_arr[$i][name]);
+                print_r($json_arr[$i]['name']);
             echo '</td>';
             echo '<td>';
-                print_r($json_arr[$i][lastName]);
+                print_r($json_arr[$i]['lastName']);
             echo '</td>';
             echo '<td>';
-                print_r($json_arr[$i][birthDate]);
+                print_r($json_arr[$i]['birthDate']);
             echo '</td>';
             echo '<td>';
-                print_r($json_arr[$i][imageRef]);
+                print_r($json_arr[$i]['imageRef']);
             echo '</td>';
         echo '</tr>';
     }

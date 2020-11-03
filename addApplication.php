@@ -1,7 +1,9 @@
  <?php
 
-   include "functions.php";  //Pievienots fails, kurā atrodas izmantotās funkcijas
+    include "functions.php";  //Pievienots fails, kurā atrodas izmantotās funkcijas
     
+    $person = new \stdClass();
+
     if(isset($_POST['submit'])){                      //Pārbauda vai forma ir apstiprināta
         $person->name = $_POST['name'] ;
         $person->lastName = $_POST['lastName'] ;
@@ -11,9 +13,6 @@
         $errorMsg = "";
         
         // Tukšu lauku un vecuma pārbaude
-        
-        
-        
         if ($person->age < 18){
         $errorMsg = "Jūs neesat sasniedzis 18 gadu vecumu, lai piedalītos";
         }

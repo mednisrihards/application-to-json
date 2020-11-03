@@ -53,13 +53,8 @@
         
                 <input type="submit" class="custom-btn" name="submit" value="Pievienot">
             </form>
-            <h3><?php echo $errorMsg; ?></h3>
-
-
         </div>
-
     </div>
-
         <table>
             <tr>
                 <th>Name</th>
